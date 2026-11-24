@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07121f">
+  <title>VoltTrack — Real-Time Circuit Lab</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="lab-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="VoltTrack home"><span class="brand-mark">V</span><span>VOLTTRACK<small>VIRTUAL SCIENCE LAB</small></span></a>
+      <div class="top-meta"><span class="live-dot"></span> LIVE SIMULATION <span class="divider">/</span> OHM’S LAW</div>
+    </header>
+
+    <section class="intro">
+      <div><p class="eyebrow">INTERACTIVE EXPERIMENT <span>01</span></p><h1>Real-Time <span>Circuit Lab</span></h1><p class="subtitle">Explore how voltage and resistance shape the current in a simple DC circuit.</p></div>
+      <button id="reset" class="reset-button" type="button"><span aria-hidden="true">↻</span> Reset experiment</button>
+    </section>
+
+    <section class="status-strip" aria-live="polite"><span class="status-indicator" id="statusIndicator"></span><strong id="statusText">CIRCUIT OFF</strong><span class="status-note" id="statusNote">Switch on to start the experiment</span><button id="power" class="power-button" type="button" aria-pressed="false"><span class="power-icon">⏻</span><span id="powerLabel">POWER ON</span></button></section>
+
+    <div class="main-grid">
+      <section class="panel controls-panel">
+        <div class="panel-heading"><div><p class="eyebrow">INPUTS</p><h2>Experiment controls</h2></div><span class="step-tag">01 — 02</span></div>
+        <div class="control-block">
+          <div class="control-label"><label for="voltage">Voltage</label><span class="control-value"><output id="voltageValue" for="voltage">12</output><small>V</small></span></div>
+          <input id="voltage" type="range" min="0" max="24" step="0.1" value="12" aria-label="Voltage in volts">
+          <div class="range-labels"><span>0 V</span><span>24 V</span></div>
+        </div>
+        <div class="control-block">
+          <div class="control-label"><label for="resistance">Resistance</label><span class="control-value"><output id="resistanceValue" for="resistance">6</output><small>Ω</small></span></div>
+          <input id="resistance" type="range" min="1" max="100" step="1" value="6" aria-label="Resistance in ohms">
+          <div class="range-labels"><span>1 Ω</span><span>100 Ω</span></div>
+        </div>
+        <div class="formula-card"><span class="formula-icon">ƒ</span><div><small>OHM’S LAW</small><strong>I = V / R</strong></div><span class="formula-detail">Current = Voltage ÷ Resistance</span></div>
+        <div class="result-card"><div><span class="result-kicker">CALCULATED CURRENT</span><span class="result-note" id="currentNote">Circuit is switched off</span></div><div class="result-number"><output id="currentValue">0.00</output><small>A</small></div></div>
+      </section>
+
+      <section class="panel circuit-panel">
+        <div class="panel-heading"><div><p class="eyebrow">CIRCUIT VIEW</p><h2>Series circuit</h2></div><span class="live-chip"><i></i> LIVE</span></div>
+        <div class="circuit-stage" id="circuitStage" aria-label="Visual series circuit">
+          <svg class="circuit-svg" viewBox="0 0 620 300" role="img" aria-label="Battery, resistor and current flow in a series circuit">
+            <defs><filter id="glow"><feGaussianBlur stdDeviation="4" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+            <path class="wire" d="M130 70 H475 Q520 70 520 115 V185 Q520 230 475 230 H130 Q85 230 85 185 V115 Q85 70 130 70"/>
+            <path class="flow" d="M130 70 H475 Q520 70 520 115 V185 Q520 230 475 230 H130 Q85 230 85 185 V115 Q85 70 130 70"/>
+            <g class="battery"><path d="M85 132 V168"/><path d="M105 120 V180"/><text x="72" y="112">+</text><text x="98" y="201">−</text></g>
+            <g class="resistor"><path d="M275 70 V95 L260 108 L290 124 L260 140 L290 156 L260 172 L290 188 L275 202 V230"/><text x="275" y="52" text-anchor="middle">R</text></g>
+            <g class="lamp" transform="translate(520 150)"><circle r="22"/><path d="M-9 -9 L9 9 M9 -9 L-9 9"/></g>
+            <text class="svg-label" x="150" y="115">SOURCE</text><text class="svg-label" x="445" y="115">LOAD</text>
+            <circle class="flow-particle p1" r="4"/><circle class="flow-particle p2" r="4"/><circle class="flow-particle p3" r="4"/>
+          </svg>
+          <span class="circuit-caption" id="circuitCaption">Switch on to visualize current flow</span>
+        </div>
+        <div class="meters">
+          <article class="meter"><span class="meter-name"><i class="meter-icon volt">V</i> VOLTMETER</span><div class="meter-reading"><output id="meterVoltage">12.0</output><small>V</small></div><span class="meter-foot">Across the source</span></article>
+          <article class="meter"><span class="meter-name"><i class="meter-icon amp">A</i> AMMETER</span><div class="meter-reading"><output id="meterCurrent">0.00</output><small>A</small></div><span class="meter-foot">Circuit current</span></article>
+          <article class="meter"><span class="meter-name"><i class="meter-icon ohm">Ω</i> RESISTANCE</span><div class="meter-reading"><output id="meterResistance">6</output><small>Ω</small></div><span class="meter-foot">Load resistance</span></article>
+        </div>
+      </section>
+    </div>
+
+    <section class="panel graph-panel">
+      <div class="panel-heading graph-heading"><div><p class="eyebrow">LIVE PLOT</p><h2>Voltage vs. current</h2><p class="graph-subtitle">Current response at the selected resistance</p></div><div class="graph-legend"><span></span> I = V / R <b id="graphResistance">R = 6 Ω</b></div></div>
+      <div class="chart-wrap"><canvas id="chart" role="img" aria-label="Graph showing current in amperes as voltage changes"></canvas><div class="chart-x-label">VOLTAGE (V)</div><div class="chart-y-label">CURRENT (A)</div></div>
+      <p class="graph-foot"><span class="plot-dot"></span> The highlighted point marks your selected voltage and current.</p>
+    </section>
+    <footer><span>VOLTTRACK LITE <i>•</i> VIRTUAL SCIENCE LAB</span><span>DC CIRCUIT <i>•</i> OHM’S LAW</span></footer>
+  </main>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
